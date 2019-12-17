@@ -1,0 +1,39 @@
+---
+title: "FPKM to TPM"
+output: html_notebook
+---
+
+
+```{r}
+Table<- read.table(file = 'Insert TSV file', sep = '\t', header = TRUE)
+Table2<- read.table(file = 'TSV File', sep = '\t', header = TRUE)
+
+Table<- BRCA_AFR_Counts[-1]
+Table2<- BRCA_NonAFR_Counts[-1]
+
+library(dplyr)
+
+FPKMtoTPM <- function(x) {
+  return(exp(log(x) - log(sum(x)) + log(1e6)))
+}
+
+
+
+df <- data.table::fread(
+    str_glue("FPKM Normalized TSV")
+  ) %>%
+    mutate_if(is.numeric, FPKMtoTPM)
+
+df
+```
+
+```{r}
+df2 <- data.table::fread(
+    str_glue("FPKM normalized TSV")
+  ) %>%
+    mutate_if(is.numeric, FPKMtoTPM)
+
+df2
+```
+
+
